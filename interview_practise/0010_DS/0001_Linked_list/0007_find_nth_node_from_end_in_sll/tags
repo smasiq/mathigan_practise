@@ -1,0 +1,17 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+TWO_POINTER_CONCEPT	0007_find_nth_node_from_end_in_sll.c	4;"	d	file:
+WITH_PASSING_LENGTH_NODE	0007_find_nth_node_from_end_in_sll.c	3;"	d	file:
+create_node	0007_find_nth_node_from_end_in_sll.c	/^void create_node (node ** head, node **tail,int *count)$/;"	f
+data	0007_find_nth_node_from_end_in_sll.c	/^	int data;$/;"	m	struct:node	file:
+display	0007_find_nth_node_from_end_in_sll.c	/^void display (node *sll)$/;"	f
+find_nth_node_from_end	0007_find_nth_node_from_end_in_sll.c	/^node * find_nth_node_from_end (node *head, int node_pos)$/;"	f
+find_nth_node_from_end	0007_find_nth_node_from_end_in_sll.c	/^node * find_nth_node_from_end (node *head, int node_pos,int sll_count)$/;"	f
+main	0007_find_nth_node_from_end_in_sll.c	/^int main (void)$/;"	f
+next	0007_find_nth_node_from_end_in_sll.c	/^	struct node *next;$/;"	m	struct:node	typeref:struct:node::node	file:
+node	0007_find_nth_node_from_end_in_sll.c	/^typedef struct node {$/;"	s	file:
+node	0007_find_nth_node_from_end_in_sll.c	/^}node;$/;"	t	typeref:struct:node	file:

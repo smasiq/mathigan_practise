@@ -1,0 +1,28 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BUFF_SIZE	0001_implement_queue_using_array.c	2;"	d	file:
+BUFF_SIZE	0002_implement_circular_queue_using_array.c	2;"	d	file:
+data	0003_implement_queue_using_linked_list.c	/^	int data;$/;"	m	struct:queue	file:
+dequeue	0001_implement_queue_using_array.c	/^void dequeue (int *arr)$/;"	f
+dequeue	0002_implement_circular_queue_using_array.c	/^void dequeue (int *arr)$/;"	f
+dequeue	0003_implement_queue_using_linked_list.c	/^void dequeue (queue **front)$/;"	f
+display	0001_implement_queue_using_array.c	/^void display (int *arr)$/;"	f
+display	0002_implement_circular_queue_using_array.c	/^void display (int *arr)$/;"	f
+display	0003_implement_queue_using_linked_list.c	/^void display (queue *front)$/;"	f
+enqueue	0001_implement_queue_using_array.c	/^void enqueue (int *arr)$/;"	f
+enqueue	0002_implement_circular_queue_using_array.c	/^void enqueue (int *arr)$/;"	f
+enqueue	0003_implement_queue_using_linked_list.c	/^void enqueue (queue **front, queue **rear)$/;"	f
+front	0001_implement_queue_using_array.c	/^int rear = -1, front = -1;$/;"	v
+front	0002_implement_circular_queue_using_array.c	/^int rear = -1, front = -1;$/;"	v
+main	0001_implement_queue_using_array.c	/^int main (void)$/;"	f
+main	0002_implement_circular_queue_using_array.c	/^int main (void)$/;"	f
+main	0003_implement_queue_using_linked_list.c	/^int main (void)$/;"	f
+next	0003_implement_queue_using_linked_list.c	/^	struct queue *next;$/;"	m	struct:queue	typeref:struct:queue::queue	file:
+queue	0003_implement_queue_using_linked_list.c	/^typedef struct queue$/;"	s	file:
+queue	0003_implement_queue_using_linked_list.c	/^}queue;$/;"	t	typeref:struct:queue	file:
+rear	0001_implement_queue_using_array.c	/^int rear = -1, front = -1;$/;"	v
+rear	0002_implement_circular_queue_using_array.c	/^int rear = -1, front = -1;$/;"	v

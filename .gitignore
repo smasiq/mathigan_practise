@@ -1,0 +1,21 @@
+# build artifacts
+*.o
+*.i
+*.s
+*.elf
+*.bin
+*.out
+
+# logs
+*.log
+core*
+
+# editor files
+*.swp
+*.swo
+*.bak
+
+# temp
+#tmp/
+#build/
+#out/

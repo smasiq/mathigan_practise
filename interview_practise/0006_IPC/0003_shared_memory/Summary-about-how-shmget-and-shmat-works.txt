@@ -1,0 +1,147 @@
+Let’s restate your summary and analyze it piece by piece:
+
+“When shmget is called, it allocates memory in RAM (kernel space physical memory).
+When shmat is called by a process, that memory is virtualized (mapped) in that process’s user space, and the process can read/write.
+If I forget shmdt and the process exits, the virtual memory also gets removed.
+But if the process stays alive, will its user space keep increasing since shared memory is created in kernel space?”
+
+Now we’ll walk through these points and refine them precisely.
+
+🧠 Step 1: What shmget() really allocates
+
+✅ shmget() reserves a shared memory segment inside the kernel’s IPC subsystem.
+
+It creates a metadata entry in kernel tables (shmid_ds structure).
+
+It does not immediately allocate all physical pages.
+
+The actual physical memory (RAM pages) is typically allocated lazily on first access (when a process writes to it through shmat).
+
+So after shmget(), the segment exists logically, but no user-space process has mapped it yet.
+
+🧩 Step 2: What happens during shmat()
+
+When a process calls:
+
+char *addr = shmat(shmid, NULL, 0);
+
+
+The kernel does this:
+
+Finds the shared segment (from its internal table).
+
+Allocates a range in that process’s virtual address space (VAS).
+
+Maps the shared segment’s physical pages (kernel-managed) into that region.
+
+Visually:
+
+Physical memory (RAM)
++-------------------------------+
+| Shared Memory Pages (kernel)  |  <-- allocated by kernel (shared)
++-------------------------------+
+
+Process A Virtual Memory
++-------------------------------+
+| ...                          |
+| [0x7f00abcd0000 - ...] --> maps to same physical pages
++-------------------------------+
+
+Process B Virtual Memory
++-------------------------------+
+| ...                          |
+| [0x7f11abcd0000 - ...] --> maps to same physical pages
++-------------------------------+
+
+
+So each process gets a virtual view pointing to the same physical memory.
+
+⚙️ Step 3: What happens if you forget shmdt()
+
+If you don’t call shmdt(), two things can happen depending on process state:
+
+🧩 Case 1: Process exits
+
+The kernel automatically unmaps all shared memory segments.
+
+Virtual mapping in that process’s VAS is destroyed.
+
+Kernel decrements nattch.
+
+If nattch == 0 and the segment is marked for deletion, kernel frees the physical memory.
+
+✅ So — nothing leaks, no issue, memory is reclaimed.
+
+🧩 Case 2: Process stays alive
+
+If your process is long-running (e.g. a daemon) and doesn’t call shmdt():
+
+The virtual address space (VAS) still contains the mapping.
+
+The mapping itself does not consume extra user-space heap memory — it’s just a range in your virtual memory.
+
+However, those shared pages remain pinned in RAM, consuming kernel memory.
+
+💡 So the user space virtual memory size (as seen in /proc/<pid>/maps) appears larger — but that doesn’t mean your process heap grew.
+It’s just that more address space is reserved for the mapping.
+
+📊 Step 4: Why VAS size may “appear” to increase
+
+Linux assigns each process its own 4GB (on 32-bit) or many terabytes (on 64-bit) virtual address space.
+
+When you call shmat(), the kernel carves out a region like:
+
+7f9babcde000-7f9babce2000 rw-s 00000000 00:13 65537 /SYSV0000000a
+
+
+That address range (say 4KB–1MB) is now part of your process’s virtual memory layout,
+so /proc/<pid>/maps shows it, and /proc/<pid>/smaps shows its size.
+
+But that doesn’t mean “the process heap increased” — it’s not part of malloc() memory, it’s just mapped memory.
+
+Refer " Understanding-behind-when-call-shmget-and-shmat.txt"
+
+⚙️ Step 5: So does user space “increase”?
+Concept	Increases?	Explanation
+Virtual address space	✅ Yes	The shared region appears as mapped in the process
+Process heap (malloc)	❌ No	Unrelated — separate memory area
+Kernel physical memory usage	✅ Yes	Shared memory pages consume real RAM (once used)
+User-space private RSS	❌ Not increased	Because those pages are shared, not private
+🧮 Step 6: What problems you face if you never detach
+
+If your process:
+
+Attaches multiple times
+
+Never detaches
+
+Keeps running
+
+Then:
+
+Problem	Description
+🧱 VAS exhaustion	If you keep attaching, you’ll fill your address space with /SYSV... mappings
+💾 Kernel memory leak	If you also never remove the segments (IPC_RMID), kernel keeps them forever
+🧩 nattch never decreases	Segment can’t be freed, even if you call IPC_RMID later
+🧠 Debugging harder	/proc/<pid>/maps fills with old shared segments
+🧹 Step 7: The right mental model
+
+Think of it like this:
+
+Layer	Who owns it	Lifetime
+Physical memory (RAM pages)	Kernel	Freed when no processes attached and IPC_RMID done
+Shared segment metadata	Kernel	Created by shmget, freed after last detach + IPC_RMID
+Virtual mapping in each process	User process	Created by shmat, destroyed by shmdt or process exit
+✅ TL;DR
+
+shmget() → creates kernel shared segment (in kernel space)
+
+shmat() → maps it into user space (virtual memory)
+
+shmdt() → removes mapping from process VAS
+
+IPC_RMID → deletes the kernel segment
+
+If you skip shmdt() but process exits → kernel cleans it up automatically
+
+If you skip shmdt() and process stays alive → mapping stays active (uses VAS + kernel RAM)

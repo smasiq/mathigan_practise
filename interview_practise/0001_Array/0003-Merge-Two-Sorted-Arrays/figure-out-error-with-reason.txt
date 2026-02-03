@@ -1,0 +1,29 @@
+1)
+   mathi@mathi:0003-Merge-Two-Sorted-Arrays$ gcc 0003-Merge-Two-Sorted-Arrays.c 
+mathi@mathi:0003-Merge-Two-Sorted-Arrays$ ./a.out 
+malloc(): corrupted top size
+
+
+Aborted (core dumped)
+
+
+Reason :
+
+   while ( first_array_pointer < size1 || second_array_pointer < size2)   // here is the bug
+	{
+		if (arr1[first_array_pointer] < arr2[second_array_pointer])
+		{
+			merge_arr [index] = arr1[first_array_pointer];
+			first_array_pointer++;
+			index++;
+		}
+		else 
+		{
+			merge_arr [index] = arr2[second_array_pointer];
+			second_array_pointer++;
+			index++;
+		}
+	}
+
+	when do checking it goes out of boundary once first_array_pointer or second_array_pointer 
+	reach array size we get above error.

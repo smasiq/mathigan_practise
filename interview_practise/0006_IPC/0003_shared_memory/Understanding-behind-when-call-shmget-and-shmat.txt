@@ -1,0 +1,123 @@
+Step 1: When shmget() is called
+int shmid = shmget(key, size, IPC_CREAT | 0666);
+
+
+At this point:
+
+No process has attached yet.
+
+The kernel creates an internal shared memory segment descriptor (inside the kernel).
+
+It reserves a region of physical pages (or marks them as needed-on-demand depending on the system).
+
+So conceptually:
+
+Kernel Space
+┌───────────────────────────────────────┐
+│ shmid=1234 → metadata + physical pages│
+└───────────────────────────────────────┘
+
+
+✅ So yes — the memory exists in kernel-managed physical memory,
+but no user process is using it yet.
+
+You can think of it like a "shared memory object" waiting to be attached.
+
+🔹 Step 2: Virtual vs Physical — what’s going on?
+
+Now, the kernel always works with physical memory,
+but user processes only see virtual addresses.
+
+So when you later call:
+
+char *addr = shmat(shmid, NULL, 0);
+
+
+you’re saying:
+
+“Kernel, please map this shared segment into my process’s virtual address space.”
+
+So:
+
+Kernel finds the shared segment (the one created by shmget()).
+
+It assigns some virtual address in your user-space VAS (like 0x7f...).
+
+It sets up page table entries (PTEs) so those virtual addresses point to the same physical pages that belong to the kernel’s shared memory.
+
+This operation is called mapping.
+
+🔹 Step 3: Mapping ≠ reserving new physical memory
+
+👉 Mapping just means “add an entry in my virtual address space that points to existing physical memory.”
+
+It doesn’t allocate new RAM.
+
+The physical pages were already created (or prepared) during shmget().
+
+Now shmat() only connects your virtual space to those pages.
+
+You can think of it like this:
+
+Physical RAM
++---------------------------+
+| Shared memory pages       |
++---------------------------+
+
+Process A (VAS)
+0x7f00abcd0000 → points here
+
+Process B (VAS)
+0x7f11abcd0000 → points here
+
+
+So two different virtual addresses in two processes → point to the same physical memory.
+That’s why updates are visible across processes.
+
+🔹 Step 4: What does “carve out” mean?
+
+“Carve out” just means:
+
+Reserve a small region from the process’s virtual address space and map it to something.
+
+When you look at /proc/<pid>/maps, every line is one such carved-out region:
+
+Example:
+
+7f9babcde000-7f9babce2000 rw-s 00000000 00:13 65537 /SYSV0000000a
+
+
+7f9babcde000-7f9babce2000 → the carved-out virtual range inside the process.
+
+rw-s → read/write and shared mapping.
+
+/SYSV0000000a → means it’s System V shared memory.
+
+So when we say the kernel “carved out” that region, it means:
+
+The kernel picked a slice of unused virtual address range from your process’s VAS and mapped the shared memory object there.
+
+🧠 Important:
+
+It’s not “heap” or “stack”.
+
+It’s just another memory mapping, like how files or shared libs are mapped.
+
+🔹 Step 5: Why /proc/<pid>/maps shows more memory
+
+After shmat():
+
+Your process’s virtual address space (VAS) now includes one extra region.
+
+But your physical memory usage doesn’t grow by the same amount, because it’s shared.
+
+So yes — the /proc/<pid>/maps “appears” larger,
+but it’s just a mapping table — not an actual per-process RAM allocation.
+
+✅ Summary table
+Step	API	What happens	Where memory is
+1	shmget()	Kernel creates shared memory object, allocates physical pages	Kernel-managed physical memory
+2	shmat()	Process maps the shared memory into its VAS	Virtual mapping in process
+3	/proc/<pid>/maps	Shows new mapped region /SYSV...	Only virtual, not new physical
+4	“Carve out”	Means kernel reserves some virtual address range to map	User-space VAS region
+

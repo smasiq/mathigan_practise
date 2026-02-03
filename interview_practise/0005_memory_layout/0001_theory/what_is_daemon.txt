@@ -1,0 +1,87 @@
+1. What Is a Daemon?
+
+👉 A daemon (pronounced “dee-mon”) is a background process that runs continuously, usually without direct user interaction.
+
+It performs system-level or service-related tasks automatically — for example, handling network requests, logging, scheduling, etc.
+
+💡 Key Idea
+
+A daemon is a user-space process (not part of the kernel) that provides a service to the system or other applications, often starting at boot time and running in the background.
+
+⚙️ 2. Daemon Characteristics
+Property	Description
+Runs in background	Does not have a controlling terminal
+Started by init/systemd	Usually starts at boot automatically
+Long-lived	Keeps running as long as the system is up
+Provides services	e.g., networking, printing, logging
+User-space process	Runs on top of kernel, not inside it
+🧩 3. Common Examples of Daemons
+Daemon Name	Function
+systemd	Master service manager; starts and monitors all other daemons
+sshd	Handles SSH (remote login) connections
+crond	Executes scheduled tasks (cron jobs)
+udevd	Manages device nodes when hardware is added/removed
+syslogd	Logs system messages
+networkd / NetworkManager	Manages network interfaces and configurations
+dbus-daemon	Enables inter-process communication (IPC) between system components
+
+🧠 All these daemons communicate with the kernel through system calls.
+
+⚙️ 4. How Daemons Start
+
+At boot time:
+
+The kernel initializes hardware and mounts the root filesystem.
+
+It starts PID 1 — the init process (in modern systems, it’s systemd).
+
+systemd (or init) then:
+
+Starts daemons (like sshd, udevd, dbus-daemon).
+
+Manages their restart, dependencies, and logs.
+
+So daemons = user-space helpers that rely on the kernel for system-level tasks.
+
+🧠 5. Daemon vs Kernel Process
+Aspect	Daemon	Kernel Process
+Runs in	User space	Kernel space
+Started by	init or systemd	Kernel itself
+Purpose	Provides system services (logging, networking)	Manages CPU, memory, devices
+Access to hardware	Indirect (via syscalls)	Direct
+Example	sshd, crond	ksoftirqd, kworker, kswapd
+⚙️ 6. Viewing Daemons in Action
+🔹 To list all daemons (system services):
+systemctl list-units --type=service
+
+🔹 To check a specific one (e.g., SSH):
+systemctl status sshd
+
+🔹 To see background processes:
+ps -ef | grep daemon
+
+
+You’ll see many like:
+
+root       624     1  0 08:00 ? 00:00:01 sshd: /usr/sbin/sshd -D
+root       400     1  0 08:00 ? 00:00:00 systemd-udevd
+
+🧠 7. How It Connects to Kernel and Memory Layout
+
+The kernel manages hardware and provides APIs via system calls.
+
+Daemons use those syscalls to provide higher-level OS services (like networking or logging).
+
+Together, they make up the full Operating System environment.
+
+So:
+
+Kernel = "engine"
+
+Daemons = "background assistants"
+
+Shell / User programs = "drivers/users"
+
+✅ Interview-Style One-Liner
+
+A daemon is a long-running background process in user space that provides system or service-level functionality (like networking, logging, or scheduling). It starts during boot (usually by systemd), runs without a terminal, and communicates with the kernel using system calls.

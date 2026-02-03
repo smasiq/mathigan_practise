@@ -1,0 +1,26 @@
+1)
+	int size = (size_1 > size_2) ? size_1 : size_2; 
+	static int ret[size];
+
+	Error:
+		   0001_Array_Intersection_Calculator.c:17:20: error: storage size of ‘ret’ isn’t constant
+	   		17 |         static int ret[size];
+      		   |                    ^~~
+
+   Reason :
+        Static storage duration needs a constant size
+		When you declare a variable as static (inside a function or at file scope), its size must be known at compile time.
+		size in your code is not a compile-time constant, it’s calculated at runtime using the ternary operator ?:.
+		The C standard does not allow variable length arrays (VLAs) to be static.
+		VLAs are only allowed with automatic storage duration (normal local variables without static).
+
+		This works (VLA, but not static):
+
+		int size = (size_1 > size_2) ? size_1 : size_2;
+		int ret[size];   // valid in C99 and later
+
+
+		❌ Not allowed:
+
+		static int ret[size];  // size is not constant → invalid
+

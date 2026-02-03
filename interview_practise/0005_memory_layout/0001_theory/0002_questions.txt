@@ -1,0 +1,22 @@
+1) What happens in memory when you declare a local variable vs a global variable?
+     when local variable declare, after compile this variable data, saved
+	 as in assembly language.
+	 and global variable data stored in .bss or .data section whether it
+	 intialized or not.
+	 once kernel create VAS for process it read elf file and create stackframe ,from
+	 that CPU executes instructions that use offsets from the frame pointer to access local variables.
+	 in stack frame and global variable stored in either .bss or 
+	 .data segment.
+
+2) Where are string literals stored?
+Example: char *str = "Hello"; — explain where "Hello" resides and what happens if you modify it.
+
+     string literals are stored in .rodata section.
+	 if modify str it give seg fault because it readonly data not able to modify data.
+
+3) What is the difference between static and dynamic memory allocation in terms of memory layout?
+     static memory allocation allocate in .data or .bss segements based on either intialized or unintialized
+	 variable.
+	 Its size is fixed, compiler know its size.
+	 dynamic memory allocation allocates in heap segments.
+	 Its size is dynamic, at runtime only it size will decide.

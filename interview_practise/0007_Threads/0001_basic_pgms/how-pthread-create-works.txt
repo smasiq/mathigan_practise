@@ -1,0 +1,141 @@
+Let’s now fix and complete the picture clearly — how pthread_create() actually interacts with kernel space, how context switch happens, and how pthread_t fits into it.
+
+🧩 Step-by-Step Flow: What happens in pthread_create()
+1️⃣ User-space setup (in glibc)
+
+When you call:
+
+pthread_create(&tid, &attr, thread_func, arg);
+
+
+the POSIX thread library (glibc) runs in user space first.
+
+It:
+
+Creates a pthread control block (in user space) — structure that stores:
+
+pthread_t ID
+
+Thread attributes (stack size, detach state, etc.)
+
+Return value pointer, join status, etc.
+
+Synchronization state (if joined/detached)
+(This is purely user-space metadata, not visible to kernel)
+
+Then, glibc allocates:
+
+A user stack for the new thread (using mmap() → creates virtual memory region for stack).
+This memory belongs to the process’s address space, not kernel.
+
+2️⃣ Kernel-space creation (via clone())
+
+Then glibc calls the clone() system call.
+
+clone() is a kernel syscall that creates a new task — just like fork(), but it shares certain things (like address space, file descriptors) with the parent, depending on flags.
+
+Example flags used by pthreads:
+
+CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM
+
+
+Meaning:
+
+CLONE_VM: share same address space (→ same heap, globals, etc.)
+
+CLONE_FILES: share open file table
+
+CLONE_THREAD: mark as a thread (not a separate process)
+
+CLONE_SIGHAND: share signal handlers
+
+CLONE_FS: share current working directory
+
+CLONE_SYSVSEM: share SysV semaphore undo lists
+
+3️⃣ Kernel allocates per-thread structures
+
+When clone() runs, the kernel allocates:
+
+Task Control Block (TCB) — actually struct task_struct
+(contains thread state, registers, scheduling info, priority, CPU affinity)
+
+Kernel stack (small ~16 KB per thread) — used only during syscalls, interrupts, context switches
+
+Adds entry to /proc/<pid>/task/<tid> for the new thread
+
+Then, the kernel scheduler puts this new task into the run queue.
+
+4️⃣ Context switch (kernel → user space)
+
+Once scheduled:
+
+The kernel loads CPU registers from the thread’s task_struct
+
+Sets instruction pointer (RIP) to point to thread_func (the function passed in pthread_create)
+
+Sets stack pointer (RSP) to the user-space stack that glibc created
+
+Then returns to user space — CPU now executes user-level instructions in thread_func()
+
+✅ Now, your thread runs in user mode, accessing shared memory (heap, globals, etc.) because of CLONE_VM.
+
+5️⃣ When the thread exits
+
+The thread can:
+
+Return from thread_func() → glibc internally calls pthread_exit()
+
+Or you can explicitly call pthread_exit()
+
+Either way:
+
+The thread notifies other threads waiting in pthread_join()
+
+Kernel marks the thread’s task as EXIT_ZOMBIE
+
+After pthread_join() or pthread_detach(), both user-space pthread metadata and kernel TCB are cleaned up
+
+🔍 Now answer your main questions
+❓ Q1: “So apart from attributes, all info is in kernel space?”
+
+No — split happens:
+
+User space (glibc): pthread_t, stack, metadata
+
+Kernel space: task_struct (TCB), scheduling, kernel stack
+
+Both cooperate.
+
+❓ Q2: “Does virtualization happen between user and kernel?”
+
+Not virtualization — just context switch:
+
+pthread_create() → syscall (clone())
+
+Kernel creates TCB, sets RIP, stack pointer
+
+Scheduler context-switches CPU from kernel → user thread
+
+No data copy needed — both share memory due to CLONE_VM.
+
+❓ Q3: “Is pthread like stdlib or kernel?”
+
+pthread = POSIX user-space library (part of glibc).
+It manages metadata + calls kernel (clone()) for thread creation.
+So: half user, half kernel cooperation.
+
+❓ Q4: “Difference between pthread control block and TCB?”
+Concept	Location	Managed by	Contains
+pthread control block (pthread_t)	User space	glibc	POSIX-level info: attributes, join state, return value, etc.
+Task Control Block (TCB / task_struct)	Kernel space	Kernel	Scheduling info, registers, kernel stack, CPU state, etc.
+
+They are different layers of abstraction for the same thread.
+
+🧠 Simple analogy
+Layer	Analogy
+pthread (user space)	"Manager’s notebook" – keeps track of employee info (pthread_t, joinable/detached)
+kernel (TCB)	"Employee record" – the OS knows where the employee is (CPU core, registers, scheduling)
+
+
+Resource : https://chatgpt.com/share/68ecf588-3288-8012-a6d7-22c7dc073366

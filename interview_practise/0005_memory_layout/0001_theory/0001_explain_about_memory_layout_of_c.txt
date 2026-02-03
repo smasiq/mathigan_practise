@@ -1,0 +1,29 @@
+Can you explain the memory layout of a running C program?
+
+   --> Memory layout is useful for kernel when source code get compiled
+       ELF file will generated, it create by GCC,
+	   with ELF file kernel try to create virtual address space for this process (eg. a.out)
+	   ELF file have several segments using that kernel allocate resource based on segments data.
+	   how to handle , and give resource.
+
+	   mainly data segements, text segments, .bss segments, 
+
+	   .bss segments have unintialized data which was declared as
+	    static, global.
+
+	   .text segements (code segments) have source code data with read permission.
+
+	   data segments have intialized data which was declared as
+	   static, global.
+
+	   malloc/calloc/realloc are data which was stored in heap segments.
+
+
+Why Memory Layout Is Useful
+
+	For the kernel: It decides how to protect and manage each memory region (e.g., prevent writing to code segment).
+
+	For the compiler/linker: It decides where to place variables and functions in the ELF file.
+
+	For developers: Understanding it helps debug crashes, memory leaks, and stack overflows.
+		Helps in understanding segmentation faults, stack overflows, memory leaks, and dangling pointers.

@@ -1,0 +1,17 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+main	main.c	/^int main(void)$/;"	f
+main	mystrcmp.c	/^int main (void)$/;"	f
+main	mystrcpy.c	/^int main (void)$/;"	f
+main	mystrlen.c	/^int main (void)$/;"	f
+main	mystrstr.c	/^int main (void)$/;"	f
+main	string_reverse.c	/^int main (void)$/;"	f
+mystrcmp	mystrcmp.c	/^int mystrcmp (const char * str_1, const char * str_2)$/;"	f
+mystrcpy	mystrcpy.c	/^char * mystrcpy (char * dest, const char * str)$/;"	f
+mystrlen	mystrlen.c	/^int mystrlen (const char * str)$/;"	f
+mystrstr	mystrstr.c	/^char * mystrstr (char * str_1, char * str_2)$/;"	f
+strrev	string_reverse.c	/^void strrev (char *str)$/;"	f

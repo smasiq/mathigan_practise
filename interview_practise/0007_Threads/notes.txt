@@ -1,0 +1,13 @@
+First to see thread id for required process first get pid value
+then using ps -Lf <pid> to see tid and how many thread are running.
+
+Example: 
+   
+     mathi@mathi:0001_basic_pgms$ ps -aux | grep pthread_creation
+	 mathi      16683  0.0  0.0  76412  1368 pts/1    Sl+  21:50   0:00 ./pthread_creation
+	 mathi      16708  0.0  0.0   9276  2100 pts/3    S+   21:51   0:00 grep --color=auto pthread_creation
+	 mathi@mathi:0001_basic_pgms$ ps -Lf 16683
+	 UID          PID    PPID     LWP  C NLWP STIME TTY      STAT   TIME CMD
+	 mathi      16683    3714   16683  0    2 21:50 pts/1    Sl+    0:00 ./pthread_creation
+	 mathi      16683    3714   16684  0    2 21:50 pts/1    Sl+    0:00 ./pthread_creation
+	 mathi@mathi:0001_basic_pgms$ 

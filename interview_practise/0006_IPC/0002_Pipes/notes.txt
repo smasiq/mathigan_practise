@@ -1,0 +1,28 @@
+A pipe is a unidirectional communication channel provided by the kernel.
+
+The kernel maintains an internal buffer between them.
+That means Linux kernel creates an in-memory pipe buffer (a circular buffer inside the kernel).
+Whatever is written to fd[1] can be read from fd[0].
+
+
+int fd[2];
+pipe(fd);
+
+Index	Description
+fd[0]	Read-end FD written by kernel   //FD - File Descriptor
+fd[1]	Write-end FD written by kernel
+
+
+int fd[2];
+it expects an array of exactly 2 integers — because:
+
+fd[0] → read end
+fd[1] → write end
+
+The kernel writes two file descriptors into that array.
+if user create int fd[100]; like that
+1st 2 elements fd[0] and fd[1] create FD for read & write.
+remaining are all stored as garbage values.
+
+it not lead to get dangerous but it waste stack memory,
+and bad code style.

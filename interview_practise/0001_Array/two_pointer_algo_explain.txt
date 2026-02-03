@@ -1,0 +1,43 @@
+🔹 What is the Two Pointer Technique?
+
+The two pointer technique is used when:
+
+We are working with arrays or strings.
+
+We want to reduce nested loops (O(n²)) into single pass (O(n)).
+
+We want to efficiently process elements in sorted or linear traversal problems.
+
+We use two indices (pointers):
+
+left → usually starts at the beginning.
+
+right → usually starts at the end (or moves forward too).
+
+By moving them intelligently, we cover all possibilities without brute force.
+
+🔹 How it Works
+
+There are two main flavors:
+
+Opposite ends technique (start + end):
+
+Example: Check if an array is a palindrome.
+
+Move left forward and right backward.
+
+Same direction technique (both move forward):
+
+Example: Remove duplicates from sorted array.
+
+One pointer (slow) tracks the result, another (fast) scans ahead.
+
+🔹 When to Use
+
+👉 You think about two pointers if:
+
+You’re told to solve an array/string problem in O(n) without extra space.
+
+You notice a sorted array (or sorted string operations).
+
+You want to avoid double loops.

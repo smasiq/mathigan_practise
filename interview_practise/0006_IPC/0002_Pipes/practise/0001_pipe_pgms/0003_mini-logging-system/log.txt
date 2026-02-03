@@ -1,0 +1,7 @@
+Event 1: Sensor ON
+Event 2: Sensor OFF
+Event 3: Temp is 37 F
+Event 4: LED blinks RED
+Event 5: LED b
+links GREEN
+

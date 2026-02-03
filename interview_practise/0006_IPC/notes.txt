@@ -1,0 +1,34 @@
+Pipe: Parent and child can send bytes through the kernel.
+
+Shared Memory: Both can write/read to the same memory region.
+
+Message Queue: They can send structured messages safely.
+
+Socket: They can even communicate across systems.
+
+
+Think in Real-World Terms
+
+	When you practice, keep asking:
+
+	“Is this one-way or two-way communication?”
+
+	“Does data persist after process exits?”
+
+	“How does the kernel transfer data — copy or reference?”
+
+	“Which IPC fits best if processes are on different machines?”
+
+	That kind of curiosity turns practice into mastery.
+
+Pro Tips
+
+	Always code small, compile with -Wall -Wextra.
+
+	Use separate terminals for sender and receiver.
+
+	Observe kernel resources (ipcs, /proc, netstat) after running.
+
+	After you finish one IPC type, summarize in a note:
+
+	“How data moves, what syscalls used, pros/cons.”

@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+alloc	0004_malloc.c	/^void alloc(int **p) {$/;"	f
+func1	0005_sample_pgm.c	/^int (*func1(int *x))[3] {$/;"	f
+func2	0005_sample_pgm.c	/^int (*func2(int *x))[3] {$/;"	f
+main	0001.c	/^int main (void)$/;"	f
+main	0002_const.c	/^int main (void)$/;"	f
+main	0003_array_of_pointer.c	/^int main (void)$/;"	f
+main	0004_malloc.c	/^int main (void)$/;"	f
+main	0005_sample_pgm.c	/^int main(void) {$/;"	f
+main	0006_void_ptr_casting.c	/^int main (void)$/;"	f

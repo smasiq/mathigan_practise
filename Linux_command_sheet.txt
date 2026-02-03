@@ -1,0 +1,71 @@
+                                                 LINUX Command Cheat Sheet
+
+1) TAR and XZ Command Cheat Sheet
+
+TAR Commands
+
+Create Archives
+
+       tar -cf archive.tar file1 file2 dir/         # Create .tar
+       
+       tar -czf archive.tar.gz file1 file2 dir/     # Create .tar.gz (gzip)
+       
+       tar -cjf archive.tar.bz2 file1 file2 dir/    # Create .tar.bz2 (bzip2)
+       
+       tar -cJf archive.tar.xz file1 file2 dir/     # Create .tar.xz (xz)
+
+Extract Archives
+
+       tar -xf archive.tar             # Extract .tar
+       
+       tar -xzf archive.tar.gz         # Extract .tar.gz
+       
+       tar -xjf archive.tar.bz2        # Extract .tar.bz2
+       
+       tar -xJf archive.tar.xz         # Extract .tar.xz
+
+List Contents of Archives
+
+       tar -tf archive.tar             # List contents of .tar
+       
+       tar -tzf archive.tar.gz         # List .tar.gz contents
+       
+       tar -tJf archive.tar.xz         # List .tar.xz contents
+
+Extract to a Specific Directory
+
+	   tar -xf archive.tar -C /path/to/dir
+
+Add Files to an Existing Archive (only works with .tar)
+
+       tar -rf archive.tar newfile
+
+XZ Commands
+
+Compress a Single File
+
+       xz file                # Compress to file.xz
+       
+       xz -k file             # Compress and keep original
+
+Decompress .xz
+
+       xz -d file.xz          # Decompress to file
+
+       unxz file.xz           # Same as above
+
+Compress with Maximum Compression
+
+       xz -9 file
+
+Show Compression Info
+ 
+       xz -l file.xz
+
+Tips
+
+Add -v flag (e.g., tar -xvf) for verbose output.
+
+Use tar for handling multi-file compression.
+
+Use xz for single-file compression.

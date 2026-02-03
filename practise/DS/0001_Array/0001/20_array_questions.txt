@@ -1,0 +1,47 @@
+Basic Level (Foundations)
+
+1) Find the largest and smallest element in an array.
+
+2) Reverse an array in-place.
+
+3) Rotate an array by k positions (left or right).
+
+4) Check if an array is a palindrome.
+
+5) Find the second largest element in an array without sorting.
+
+Intermediate Level (Logic & Patterns)
+
+6) Find the missing number in an array containing n distinct numbers from 0 to n.
+
+7) Find the duplicate element in an array (only one duplicate exists).
+
+8) Move all zeroes to the end of the array without changing the order of other elements.
+
+9) Merge two sorted arrays into one sorted array (without using extra sorting).
+
+10) Find the majority element (element appearing more than n/2 times).
+
+Problem-Solving Level (Classic Interview Set)
+
+11) Find the maximum subarray sum (Kadane’s Algorithm).
+
+12) Find the intersection and union of two arrays.
+
+13) Given a sorted array, remove duplicates in-place and return the new length.
+
+14) Search an element in a rotated sorted array.
+
+15) Given an array of integers, find two numbers that add up to a target (Two-Sum problem).
+
+Advanced Level (Tricky & Optimization)
+
+16) Find the length of the longest consecutive subsequence.
+
+17) Find the maximum product subarray.
+
+18) Given an array of size n+1 containing numbers from 1 to n, find the duplicate number (Floyd’s cycle detection approach).
+
+19) Find the subarray with a given sum (handle both positive & negative numbers).
+
+20) Given an array, find the trapping rainwater after rainfall.

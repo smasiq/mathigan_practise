@@ -1,0 +1,35 @@
+    Shared memory allows two or more processes to share a portion of memory that 
+they can read/write directly — without using pipes, sockets, or files.
+
+It create memory in kernel space.
+
+using shmget with flag IPC_CREAT it create memory in kernel space
+even we call with same key multiple time it not create memory
+every time once created succesfully.
+
+  when use shmat it point out memory which was virtualized in User space 
+from which process run (Eg. ./reader run from reader Vas we call shmat that 
+point mem address which was alloacted in reader Vas, that means kernel mem
+virtualized in user space).
+
+  Refer this notes "Summary-about-how-shmget-and-shmat-works.txt" for 
+  better understanding.
+
+ipcrm -m <shmid>  -- to remove share mem id manually
+Eg:  ipcrm -m 65537
+
+
+Important kernel parameters
+
+System V IPC shared memory has 3 key limits:
+
+Parameter	What it means	Default on modern Linux (x86_64)
+SHMMAX	Maximum size of one shared memory segment	33554432 (32 MB)
+SHMMNI	Maximum number of shared memory segments in the system	4096
+SHMALL	Total shared memory pages in system	2097152 (on 4 KB pages ≈ 8 GB)
+
+You can check them:
+
+cat /proc/sys/kernel/shmmax
+cat /proc/sys/kernel/shmall
+cat /proc/sys/kernel/shmmni

@@ -1,0 +1,75 @@
+1 ) If segmentation fault happen coredump will generate
+    If user wants to debug follow this steps
+
+	step -1 :
+	   run this command ulimit -c,
+	   it it show 0, change to unlimited.
+
+	   ulimit -c unlimited
+
+    step -2:
+	   then run this command for save core dump, 
+	   in current path,
+	     
+		  sudo sysctl -w kernel.core_pattern=core
+
+    step -3:
+	    then run gdb ./a.out core
+        check backtrace ( type bt) then start to debug.
+
+2) Collect log what we see output in GDB shell
+
+    set logging file ./debug.log
+    set logging on
+	set logging off
+	
+3) Examine memory using x
+
+	x / <count><size><format>  <address-or-expression>
+	count — how many items to print (default 1).
+
+	size — unit size: b (byte=1), h (half=2), w (word=4), g (giant=8).
+
+	b (byte): prints a single byte values. Use when you want raw bytes.
+
+	h (2 bytes): prints 16-bit values (two bytes combined). On little endian machines low-order byte is first.
+
+	w (4 bytes): prints 32-bit values (four bytes combined).
+
+	g (8 bytes): prints 64-bit values.
+
+	format — how to display: x hex, d decimal, u unsigned, o octal, t binary, c char, s C-string,
+	i instruction (disassemble), f float.
+
+	address-or-expression — pointer, symbol, arithmetic, e.g. buffer, &test, buffer - 20, 0x7fffffffdb9c.
+
+Examples:
+
+     x/4xb &test — show 4 bytes in hex starting at &test.
+
+     x/8gx $rbp — show 8 giant (8-byte) words in hex starting at $rbp.
+
+	 x/s buffer — print a C string starting at buffer.
+
+	 x/i $rip — disassemble instruction at current RIP.
+
+4) watch
+
+	Set a watchpoint for a variable. The program will stop when the variable changes.
+
+	    Syntax: watch <variable_name>
+		Example: watch myVariable
+
+5) set print pretty on
+
+	Print structures in a pretty format, making it easier to read complex data structures.
+
+	Example :
+	   (gdb) set print pretty on
+	   (gdb) print p
+	   $1 = {
+ 				 name = "Alice",
+				 age = 30,
+				 height = 5.5
+	   }
+

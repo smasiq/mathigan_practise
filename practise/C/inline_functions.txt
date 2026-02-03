@@ -1,0 +1,29 @@
+What inline really means
+
+When you mark a function as inline, you’re basically telling the compiler:
+
+“Hey, if it makes sense, you may replace this function call with the function body.”
+
+The compiler is free to ignore it.
+
+When the compiler will ignore inline
+
+Even if you write inline, the compiler might not inline the function if:
+
+Function is too large
+Inlining would increase code size too much.
+
+Complex control flow
+Loops, recursion, switch statements, etc.
+
+Recursion
+Recursive functions generally can’t be inlined.
+
+Address of function is taken
+
+inline void foo() {}
+void (*fp)(void) = foo;   // likely prevents inlining
+
+
+Low optimization level
+At -O0, most compilers ignore inlining almost completely.

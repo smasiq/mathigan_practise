@@ -1,0 +1,15 @@
+
+Always close unused ends — otherwise reads/writes can block indefinitely.
+
+Pipe has a limited buffer (~64 KB in Linux).
+
+If reader isn’t ready, writer blocks (and vice versa).
+
+open() on FIFO (created with mkfifo) blocks until both reader and writer are connected.
+  - It means reader call open fifo means writer blocks and vice versa.
+  - when both reader and writer run parallely means it won't block communication happens.
+
+  If you ever want to prevent blocking (for testing or async code), you can open in non-blocking mode:
+
+  int fd = open("myfifo", O_WRONLY | O_NONBLOCK)
+  Then open() will return immediately — but if no reader is connected, write() will fail with ENXIO.
